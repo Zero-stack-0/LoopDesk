@@ -28,5 +28,9 @@ namespace Data
             database.GetCollection<Role>(
                 config.Value.Collections.FirstOrDefault(c => c == "role") ?? "role"
             );
+        public IMongoCollection<Subscription> Subscription =>
+            database.GetCollection<Subscription>(
+                config.Value.Collections.FirstOrDefault(c => c == "subscription") ?? "subscription"
+            );
     }
 }

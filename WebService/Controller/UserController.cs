@@ -47,7 +47,7 @@ namespace WebService.Controller
                 var userResponse = response.Result as UserResponse;
                 if (userResponse != null)
                 {
-                    var token = generateJwtToken.GenerateToken(userResponse.Name, userResponse.Role.Id, userResponse.Email);
+                    var token = generateJwtToken.GenerateToken(userResponse.Name, userResponse.Role.Name, userResponse.Email);
                     return Ok(new CommonResponse(StatusCodes.Status200OK, token, "Login successful"));
                 }
             }

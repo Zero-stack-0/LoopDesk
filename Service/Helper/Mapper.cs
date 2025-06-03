@@ -1,6 +1,7 @@
 using AutoMapper;
 using Entities.Models;
 using Service.Dto.Role;
+using Service.Dto.Subscription;
 using Service.Dto.User;
 
 namespace Service.Helper
@@ -11,6 +12,7 @@ namespace Service.Helper
         {
             CreateMap<Users, UserResponse>();
             CreateMap<Role, RoleResponse>();
+            CreateMap<Subscription, SubscriptionResponse>();
         }
     }
 }
