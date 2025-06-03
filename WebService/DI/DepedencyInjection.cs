@@ -3,6 +3,7 @@ using Data.Interface;
 using Data.Repository;
 using Service;
 using Data;
+using WebService.Auth;
 
 namespace WebService.DI
 {
@@ -19,8 +20,12 @@ namespace WebService.DI
 
             //repositories
             services.AddScoped<IUserRepository, UsersRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
             services.AddScoped<MongoDbContext>();
+            services.AddScoped<GenerateJwtToken>();
+            services.AddScoped<UserProfile>();
+            services.AddAutoMapper(typeof(Service.Helper.Mapper).Assembly);
         }
     }
 }

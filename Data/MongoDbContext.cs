@@ -3,7 +3,6 @@
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using Entities.Models;
-using Entities;
 
 namespace Data
 {
@@ -23,6 +22,11 @@ namespace Data
         public IMongoCollection<Users> Users =>
             database.GetCollection<Users>(
                 config.Value.Collections.FirstOrDefault(c => c == "users") ?? "users"
+            );
+
+        public IMongoCollection<Role> Role =>
+            database.GetCollection<Role>(
+                config.Value.Collections.FirstOrDefault(c => c == "role") ?? "role"
             );
     }
 }

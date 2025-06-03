@@ -1,4 +1,4 @@
-using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Entities.Models
@@ -10,18 +10,18 @@ namespace Entities.Models
 
         }
 
-        public Users(string name, string password, string email)
+        public Users(string name, string password, string email, ObjectId roleId)
         {
             Name = name;
             Email = email;
             Password = password;
+            RoleId = roleId;
             CreatedAt = DateTime.UtcNow;
             IsActive = true;
-            RoleId = "test";
         }
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
+        public ObjectId Id { get; set; }
         [BsonElement]
         public string Name { get; set; }
         [BsonElement]
@@ -37,6 +37,9 @@ namespace Entities.Models
         [BsonElement]
         public bool IsActive { get; set; }
         [BsonElement]
-        public string RoleId { get; set; }
+        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public ObjectId RoleId { get; set; }
+
+        public Role? Role { get; set; }
     }
 }

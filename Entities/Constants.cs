@@ -12,6 +12,8 @@ namespace Entities
         {
             public const string CANNOT_BE_EMPTY = "{0} cannot be empty";
             public const string USER_ALREADY_EXISTS_WITH_EMAIL = "User already exists with this email";
+            public const string USER_NOT_FOUND = "User not found";
+            public const string ROLE_NOT_FOUND = "Role not found";
         }
     }
 }

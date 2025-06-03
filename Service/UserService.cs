@@ -2,11 +2,11 @@
 
 using System.Security.Cryptography;
 using System.Text;
+using AutoMapper;
 using Data.Interface;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualBasic;
 using Service.Dto.User;
 using Service.Helper;
 using Service.Interface;
@@ -17,10 +17,14 @@ namespace Service
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IRoleRepository roleRepository;
+        private readonly IMapper mapper;
         private readonly string AES_KEY;
-        public UserService(IUserRepository userRepository, IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IConfiguration configuration, IMapper mapper)
         {
             this.userRepository = userRepository;
+            this.roleRepository = roleRepository;
+            this.mapper = mapper;
             this.AES_KEY = configuration["AESKEY"] ?? "";
         }
 
@@ -54,11 +58,71 @@ namespace Service
                     return new CommonResponse(StatusCodes.Status400BadRequest, null, USER_VALIDATIONS.USER_ALREADY_EXISTS_WITH_EMAIL);
                 }
 
-                var user = new Users(request.Name, EncryptString(request.Password, AES_KEY), request.Email);
+                var roleByName = await roleRepository.GetByName("Admin");
+                if (roleByName is null)
+                {
+                    return new CommonResponse(StatusCodes.Status404NotFound, null, USER_VALIDATIONS.ROLE_NOT_FOUND);
+                }
+
+                var user = new Users(request.Name, EncryptString(request.Password, AES_KEY), request.Email, roleByName.Id);
 
                 var createdUser = await userRepository.Create(user);
 
-                return new CommonResponse(StatusCodes.Status201Created, createdUser, "User created succuesfully");
+                return new CommonResponse(StatusCodes.Status201Created, mapper.Map<UserResponse>(createdUser), "User created succuesfully");
+            }
+            catch (Exception ex)
+            {
+                return new CommonResponse(StatusCodes.Status500InternalServerError, null, ex.Message);
+            }
+        }
+
+        public async Task<CommonResponse> Login(LoginRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(request.Email))
+                {
+                    return new CommonResponse(StatusCodes.Status400BadRequest, null, string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, "Email"));
+                }
+
+                if (string.IsNullOrWhiteSpace(request.Password))
+                {
+                    return new CommonResponse(StatusCodes.Status400BadRequest, null, string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, "Password"));
+                }
+
+                if (string.IsNullOrWhiteSpace(AES_KEY))
+                {
+                    return new CommonResponse().Error(StatusCodes.Status500InternalServerError, null, SOMETHING_WENT_WRONG);
+                }
+
+                var user = await userRepository.GetByEmailAndPassword(request.Email, EncryptString(request.Password, AES_KEY));
+                if (user is null)
+                {
+                    return new CommonResponse(StatusCodes.Status404NotFound, null, USER_VALIDATIONS.USER_NOT_FOUND);
+                }
+                return new CommonResponse(StatusCodes.Status200OK, mapper.Map<UserResponse>(user), "User logged in successfully");
+            }
+            catch (Exception ex)
+            {
+                return new CommonResponse(StatusCodes.Status500InternalServerError, null, ex.Message);
+            }
+        }
+
+        public async Task<CommonResponse> GetByEmail(string email)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    return new CommonResponse(StatusCodes.Status400BadRequest, null, string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, "Email"));
+                }
+
+                var user = await userRepository.GetByEmail(email);
+                if (user is null)
+                {
+                    return new CommonResponse(StatusCodes.Status404NotFound, null, USER_VALIDATIONS.USER_NOT_FOUND);
+                }
+                return new CommonResponse(StatusCodes.Status200OK, mapper.Map<UserResponse>(user), "User found successfully");
             }
             catch (Exception ex)
             {
@@ -71,35 +135,15 @@ namespace Service
             using var aes = Aes.Create();
             var keyBytes = Encoding.UTF8.GetBytes(key.PadRight(32).Substring(0, 32));
             aes.Key = keyBytes;
-            aes.GenerateIV();
-            var iv = aes.IV;
-
-            using var encryptor = aes.CreateEncryptor(aes.Key, iv);
+            aes.IV = new byte[16]; // All zeros (not secure)
+            using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
             using var ms = new MemoryStream();
-            ms.Write(iv, 0, iv.Length);
             using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
             using (var sw = new StreamWriter(cs))
             {
                 sw.Write(plainText);
             }
             return Convert.ToBase64String(ms.ToArray());
-        }
-
-        public static string DecryptString(string cipherText, string key)
-        {
-            var fullCipher = Convert.FromBase64String(cipherText);
-            using var aes = Aes.Create();
-            var keyBytes = Encoding.UTF8.GetBytes(key.PadRight(32).Substring(0, 32));
-            aes.Key = keyBytes;
-            var iv = new byte[16];
-            Array.Copy(fullCipher, 0, iv, 0, iv.Length);
-            aes.IV = iv;
-
-            using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-            using var ms = new MemoryStream(fullCipher, 16, fullCipher.Length - 16);
-            using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
-            using var sr = new StreamReader(cs);
-            return sr.ReadToEnd();
         }
     }
 }
