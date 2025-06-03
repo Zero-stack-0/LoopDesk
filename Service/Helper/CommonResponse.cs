@@ -12,8 +12,8 @@ namespace Service.Helper
             Result = result;
             Message = message;
         }
-        public int StatusCode { get; set; }
         public object? Result { get; set; }
+        public int StatusCode { get; set; }
         public string? Message { get; set; }
 
         public static CommonResponse Success(object? result = null, string? message = null)

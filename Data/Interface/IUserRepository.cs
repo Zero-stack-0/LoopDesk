@@ -6,5 +6,6 @@ namespace Data.Interface
     {
         Task<Users?> Create(Users user);
         Task<Users?> GetByEmail(string email);
+        Task<Users?> GetByEmailAndPassword(string email, string password);
     }
 }
