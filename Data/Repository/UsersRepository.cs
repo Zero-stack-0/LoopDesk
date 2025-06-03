@@ -8,11 +8,9 @@ namespace Data.Repository
     public class UsersRepository : IUserRepository
     {
         private readonly IMongoCollection<Users> _usersCollection;
-        private readonly IMongoCollection<Role> _roleCollection;
         public UsersRepository(MongoDbContext context)
         {
             _usersCollection = context.Users;
-            _roleCollection = context.Role;
         }
         public async Task<Users?> Create(Users user)
         {
@@ -62,6 +60,43 @@ namespace Data.Repository
                 new BsonDocument("$match", new BsonDocument{
                     { "Email", email },
                     { "Password", password },
+                    { "IsActive", true }
+                }),
+
+                new BsonDocument("$lookup", new BsonDocument
+                {
+                    { "from", "role" },
+                    { "localField", "RoleId" },
+                    { "foreignField", "_id" },
+                    { "as", "Role" }
+                }),
+
+                new BsonDocument("$unwind", new BsonDocument {
+                    { "path", "$Role" },
+                    { "preserveNullAndEmptyArrays", true }
+                })
+            };
+
+            return await _usersCollection.Aggregate<Users>(pipeline).FirstOrDefaultAsync();
+        }
+
+        public async Task<Users?> UpdateLastLogin(Users user)
+        {
+            var filter = Builders<Users>.Filter.Eq(u => u.Id, user.Id);
+            var update = Builders<Users>.Update
+                .Set(u => u.LastLoginedAt, DateTime.UtcNow)
+                .Set(u => u.UpdatedAt, DateTime.UtcNow);
+
+            var result = await _usersCollection.UpdateOneAsync(filter, update);
+            return result.ModifiedCount > 0 ? user : null;
+        }
+
+        public async Task<Users?> GetById(ObjectId id)
+        {
+            var pipeline = new[]
+            {
+                new BsonDocument("$match", new BsonDocument{
+                    { "_id", id },
                     { "IsActive", true }
                 }),
 

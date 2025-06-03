@@ -100,6 +100,9 @@ namespace Service
                 {
                     return new CommonResponse(StatusCodes.Status404NotFound, null, USER_VALIDATIONS.USER_NOT_FOUND);
                 }
+
+                await userRepository.UpdateLastLogin(user);
+
                 return new CommonResponse(StatusCodes.Status200OK, mapper.Map<UserResponse>(user), "User logged in successfully");
             }
             catch (Exception ex)
