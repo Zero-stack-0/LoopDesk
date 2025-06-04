@@ -32,19 +32,19 @@ namespace Service
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(request.Email))
+                var erroListing = new List<(bool Condition, string ErrorMessage)>
                 {
-                    return new CommonResponse(StatusCodes.Status400BadRequest, null, string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, "Email"));
-                }
+                    (string.IsNullOrWhiteSpace(request.Email), string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, Keys.EMAIL)),
+                    (string.IsNullOrWhiteSpace(request.Name), string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, Keys.NAME)),
+                    (string.IsNullOrWhiteSpace(request.Password), string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, Keys.PASSWORD))
+                };
 
-                if (string.IsNullOrWhiteSpace(request.Name))
+                foreach (var (condition, errorMessage) in erroListing)
                 {
-                    return new CommonResponse(StatusCodes.Status400BadRequest, null, string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, "Name"));
-                }
-
-                if (string.IsNullOrWhiteSpace(request.Password))
-                {
-                    return new CommonResponse(StatusCodes.Status400BadRequest, null, string.Format(USER_VALIDATIONS.CANNOT_BE_EMPTY, "Password"));
+                    if (condition)
+                    {
+                        return new CommonResponse(StatusCodes.Status400BadRequest, null, errorMessage);
+                    }
                 }
 
                 if (string.IsNullOrWhiteSpace(AES_KEY))
@@ -58,7 +58,7 @@ namespace Service
                     return new CommonResponse(StatusCodes.Status400BadRequest, null, USER_VALIDATIONS.USER_ALREADY_EXISTS_WITH_EMAIL);
                 }
 
-                var roleByName = await roleRepository.GetByName("Admin");
+                var roleByName = await roleRepository.GetByName(ROLE.COMPANY_ADMIN);
                 if (roleByName is null)
                 {
                     return new CommonResponse(StatusCodes.Status404NotFound, null, USER_VALIDATIONS.ROLE_NOT_FOUND);
@@ -68,7 +68,7 @@ namespace Service
 
                 var createdUser = await userRepository.Create(user);
 
-                return new CommonResponse(StatusCodes.Status201Created, mapper.Map<UserResponse>(createdUser), "User created succuesfully");
+                return new CommonResponse(StatusCodes.Status201Created, mapper.Map<UserResponse>(createdUser), USER_VALIDATIONS.USER_CREATED_SUCCESSFULLY);
             }
             catch (Exception ex)
             {

@@ -35,7 +35,17 @@ namespace WebService.Controller
         [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] CreateRequest request)
         {
-            return Ok(await userService.Create(request));
+            var data = await userService.Create(request);
+            if (data.StatusCode == StatusCodes.Status200OK)
+            {
+                var userResponse = data.Result as UserResponse;
+                if (userResponse != null)
+                {
+                    var token = generateJwtToken.GenerateToken(userResponse.Name, userResponse.Role.Name, userResponse.Email);
+                    return Ok(new CommonResponse(StatusCodes.Status200OK, token, Constants.USER_VALIDATIONS.USER_CREATED_SUCCESSFULLY));
+                }
+            }
+            return Ok(data);
         }
 
         [HttpPost("login")]

@@ -32,5 +32,19 @@ namespace Data
             database.GetCollection<Subscription>(
                 config.Value.Collections.FirstOrDefault(c => c == "subscription") ?? "subscription"
             );
+
+        public IMongoCollection<Country> Country =>
+            database.GetCollection<Country>(
+                config.Value.Collections.FirstOrDefault(c => c == "country") ?? "country"
+            );
+
+        public IMongoCollection<State> State =>
+            database.GetCollection<State>(
+                config.Value.Collections.FirstOrDefault(c => c == "state") ?? "state"
+            );
+        public IMongoCollection<City> City =>
+            database.GetCollection<City>(
+                config.Value.Collections.FirstOrDefault(c => c == "city") ?? "city"
+            );
     }
 }

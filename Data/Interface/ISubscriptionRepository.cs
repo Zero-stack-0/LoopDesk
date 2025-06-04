@@ -8,5 +8,6 @@ namespace Data.Interface
         Task<Subscription> CreateAsync(Subscription subscription);
         Task<Subscription?> GetByName(string name);
         Task<bool> Delete(ObjectId id);
+        Task<ICollection<Subscription>> GetAllAsync();
     }
 }

@@ -60,7 +60,7 @@ namespace Service
                     return new CommonResponse(StatusCodes.Status409Conflict, null, Constants.SUBSCRIPTION_VALIDATIONS.SUBSCRIPTION_WITH_NAME_ALREADY_EXISTS);
                 }
 
-                var subscription = new Subscription(request.Name, requestor.Id, request.Description, request.ProjectsAllowed, request.UsersAllowed, request.Price);
+                var subscription = new Subscription(request.Name, ObjectId.TryParse(requestor.Id, out var objectId) ? objectId : ObjectId.Empty, request.Description, request.ProjectsAllowed, request.UsersAllowed, request.Price);
 
                 var createdSubscription = await subscriptionRepository.CreateAsync(subscription);
 
@@ -69,6 +69,28 @@ namespace Service
             catch (Exception ex)
             {
                 // Log the exception (ex) here if needed
+                return new CommonResponse(StatusCodes.Status500InternalServerError, null, ex.Message);
+            }
+        }
+
+        public async Task<CommonResponse> GetAll(UserResponse requestor)
+        {
+            try
+            {
+                if (requestor is null)
+                {
+                    return new CommonResponse(StatusCodes.Status400BadRequest, null, Constants.USER_VALIDATIONS.REQUESTOR_NOT_FOUND);
+                }
+
+                if (requestor.Role is null || requestor.Role.Name != Constants.ROLE.COMPANY_ADMIN)
+                {
+                    return new CommonResponse(StatusCodes.Status403Forbidden, null, Constants.USER_VALIDATIONS.USER_NOT_AUTHORIZED);
+                }
+
+                return new CommonResponse(StatusCodes.Status200OK, mapper.Map<ICollection<SubscriptionResponse>>(await subscriptionRepository.GetAllAsync()), Constants.SUBSCRIPTION_VALIDATIONS.FETCHED_SUCCESSFULLY);
+            }
+            catch (Exception ex)
+            {
                 return new CommonResponse(StatusCodes.Status500InternalServerError, null, ex.Message);
             }
         }
