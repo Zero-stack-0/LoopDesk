@@ -1,3 +1,4 @@
+using Entities.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -18,6 +19,7 @@ namespace Entities.Models
             RoleId = roleId;
             CreatedAt = DateTime.UtcNow;
             IsActive = true;
+            UserProfileSetUpStep = UserProfileSetUpStep.BasicInfo;
         }
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
@@ -41,5 +43,7 @@ namespace Entities.Models
         public ObjectId RoleId { get; set; }
 
         public Role? Role { get; set; }
+        [BsonElement]
+        public UserProfileSetUpStep UserProfileSetUpStep { get; set; }
     }
 }

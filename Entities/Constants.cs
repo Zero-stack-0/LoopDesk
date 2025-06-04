@@ -8,6 +8,13 @@ namespace Entities
         public const string LOOPDESK = "LoopDesk";
         public const string SOMETHING_WENT_WRONG = "Something went wrong";
 
+        public static class Keys
+        {
+            public const string EMAIL = "Email";
+            public const string NAME = "Name";
+            public const string PASSWORD = "Password";
+        }
+
         public static class USER_VALIDATIONS
         {
             public const string CANNOT_BE_EMPTY = "{0} cannot be empty";
@@ -16,11 +23,13 @@ namespace Entities
             public const string ROLE_NOT_FOUND = "Role not found";
             public const string REQUESTOR_NOT_FOUND = "Requestor not found";
             public const string USER_NOT_AUTHORIZED = "User not authorized";
+            public const string USER_CREATED_SUCCESSFULLY = "User created successfully";
         }
 
         public static class ROLE
         {
             public const string ADMIN = "Admin";
+            public const string COMPANY_ADMIN = "CompanyAdmin";
         }
 
         public static class SUBSCRIPTION_VALIDATIONS
@@ -37,6 +46,8 @@ namespace Entities
             public const string INVALID_ID = "Invalid subscription id";
             public const string CREATED_SUCCESSFULLY = "Subscription created successfully";
             public const string DELETED_SUCCESSFULLY = "Subscription deleted successfully";
+            public const string FETCHED_SUCCESSFULLY = "Subscriptions fetched successfully";
+
         }
     }
 }

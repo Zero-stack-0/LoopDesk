@@ -39,5 +39,11 @@ namespace Data.Repository
             var result = await subscriptionCollection.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0 ? true : false;
         }
+
+        public async Task<ICollection<Subscription>> GetAllAsync()
+        {
+            var filter = Builders<Subscription>.Filter.Eq(s => s.IsActive, true);
+            return await subscriptionCollection.Find(filter).ToListAsync();
+        }
     }
 }
