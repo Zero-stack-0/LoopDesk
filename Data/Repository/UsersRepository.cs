@@ -80,11 +80,13 @@ namespace Data.Repository
             return await _usersCollection.Aggregate<Users>(pipeline).FirstOrDefaultAsync();
         }
 
-        public async Task<Users?> UpdateLastLogin(Users user)
+        public async Task<Users?> Update(Users user)
         {
             var filter = Builders<Users>.Filter.Eq(u => u.Id, user.Id);
             var update = Builders<Users>.Update
                 .Set(u => u.LastLoginedAt, DateTime.UtcNow)
+                .Set(u => u.Name, user.Name)
+                .Set(u => u.UserProfileSetUpStep, user.UserProfileSetUpStep)
                 .Set(u => u.UpdatedAt, DateTime.UtcNow);
 
             var result = await _usersCollection.UpdateOneAsync(filter, update);

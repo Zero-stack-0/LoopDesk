@@ -33,5 +33,21 @@ namespace Data.Repository
             var filter = Builders<City>.Filter.Eq(c => c.stateId, stateId);
             return await _cityCollection.Find(filter).Sort(Builders<City>.Sort.Ascending(e => e.name)).ToListAsync();
         }
+
+        public async Task<Country> GetCountryById(ObjectId countryId)
+        {
+            var filter = Builders<Country>.Filter.Eq(c => c.Id, countryId);
+            return await _countryCollection.Find(filter).FirstOrDefaultAsync();
+        }
+        public async Task<State> GetStateById(ObjectId stateId)
+        {
+            var filter = Builders<State>.Filter.Eq(s => s.Id, stateId);
+            return await _stateCollection.Find(filter).FirstOrDefaultAsync();
+        }
+        public async Task<City> GetCityById(ObjectId cityId)
+        {
+            var filter = Builders<City>.Filter.Eq(c => c.Id, cityId);
+            return await _cityCollection.Find(filter).FirstOrDefaultAsync();
+        }
     }
 }

@@ -1,5 +1,3 @@
-
-
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using Entities.Models;
@@ -45,6 +43,10 @@ namespace Data
         public IMongoCollection<City> City =>
             database.GetCollection<City>(
                 config.Value.Collections.FirstOrDefault(c => c == "city") ?? "city"
+            );
+        public IMongoCollection<CompanyInformation> Language =>
+            database.GetCollection<CompanyInformation>(
+                config.Value.Collections.FirstOrDefault(c => c == "companyinfo") ?? "companyinfo"
             );
     }
 }
