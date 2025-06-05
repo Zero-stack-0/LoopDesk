@@ -19,12 +19,14 @@ namespace WebService.DI
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ICompanyInformationService, CompanyInformationService>();
 
             //repositories
             services.AddScoped<IUserRepository, UsersRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
 
             services.AddScoped<MongoDbContext>();
             services.AddScoped<GenerateJwtToken>();

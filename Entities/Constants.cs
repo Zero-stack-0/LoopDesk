@@ -1,3 +1,6 @@
+using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
+
 namespace Entities
 {
     public static class Constants
@@ -48,6 +51,30 @@ namespace Entities
             public const string DELETED_SUCCESSFULLY = "Subscription deleted successfully";
             public const string FETCHED_SUCCESSFULLY = "Subscriptions fetched successfully";
 
+        }
+
+        public static class COMPANY_VALIDATIONS
+        {
+            public const string NAME_REQUIRED = "Company name is required";
+            public const string DOMAIN_REQUIRED = "Domain is required";
+            public const string ADDRESS_REQUIRED = "Address is required";
+            public const string PHONE_REQUIRED = "Phone number is required";
+            public const string LOGOURL_REQUIRED = "Logo URL is required";
+            public const string DESCRIPTION_REQUIRED = "Description is required";
+            public const string COUNTRYID_REQUIRED = "Country ID is required";
+            public const string STATEID_REQUIRED = "State ID is required";
+            public const string CITYID_REQUIRED = "City ID is required";
+            public const string COUNTRY_NOT_FOUND = "Country not found";
+            public const string STATE_NOT_FOUND = "State not found";
+            public const string CITY_NOT_FOUND = "City not found";
+            public const string COMAPNY_ALREADY_EXISTS = "Company already exists for this owner";
+            public const string CREATED_SUCCESSFULLY = "Company created successfully";
+            public const string DOMAIN_INVALID = "Domain is invalid";
+            public const string PHONE_INVALID = "Phone number is invalid";
+            public const string NAME_REQUIREMENTS = "Company name must be between 3 and 50 characters";
+            public const string DOMAIN_REQUIREMENTS = "Domain must be between 3 and 100 characters";
+            public const string ADDRESS_REQUIREMENTS = "Address must be between 5 and 200 characters";
+            public const string PHONE_REQUIREMENTS = "Phone number must be between 10 and 15 characters";
         }
     }
 }

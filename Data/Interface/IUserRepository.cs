@@ -8,7 +8,7 @@ namespace Data.Interface
         Task<Users?> Create(Users user);
         Task<Users?> GetByEmail(string email);
         Task<Users?> GetByEmailAndPassword(string email, string password);
-        Task<Users?> UpdateLastLogin(Users user);
+        Task<Users?> Update(Users user);
         Task<Users?> GetById(ObjectId id);
     }
 }
