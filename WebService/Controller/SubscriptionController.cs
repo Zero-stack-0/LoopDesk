@@ -50,5 +50,17 @@ namespace WebService.Controller
             var response = await subscriptionService.Delete(id, userResponse);
             return Ok(response);
         }
+
+        [HttpGet("get-by-id")]
+        public async Task<IActionResult> GetById([FromQuery] string id)
+        {
+            return Ok(await subscriptionService.GetById(id, await userProfile.GetUserDetail(User.Identity as ClaimsIdentity)));
+        }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await subscriptionService.GetAll(await userProfile.GetUserDetail(User.Identity as ClaimsIdentity)));
+        }
     }
 }
