@@ -75,6 +75,17 @@ namespace Entities
             public const string DOMAIN_REQUIREMENTS = "Domain must be between 3 and 100 characters";
             public const string ADDRESS_REQUIREMENTS = "Address must be between 5 and 200 characters";
             public const string PHONE_REQUIREMENTS = "Phone number must be between 10 and 15 characters";
+            public const string COMPANY_NOT_FOUND = "Company not found";
+        }
+
+        public static class USER_SUBSCRIPTION_VALIDATIONS
+        {
+            public const string USER_SUBSCRIPTION_ALREADY_EXISTS = "User subscription already exists";
+            public const string USER_SUBSCRIPTION_NOT_FOUND = "User subscription not found";
+            public const string USER_SUBSCRIPTION_CREATED_SUCCESSFULLY = "User subscription created successfully";
+            public const string USER_SUBSCRIPTION_DELETED_SUCCESSFULLY = "User subscription deleted successfully";
+            public const string USER_SUBSCRIPTION_FETCHED_SUCCESSFULLY = "User subscriptions fetched successfully";
+            public const string USER_SUBSCRIPTION_CREATION_FAILED = "User subscription creation failed";
         }
     }
 }

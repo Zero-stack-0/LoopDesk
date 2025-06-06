@@ -22,7 +22,7 @@ namespace Entities.Models
             UserProfileSetUpStep = UserProfileSetUpStep.BasicInfo;
         }
         [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId Id { get; set; }
         [BsonElement]
         public string Name { get; set; }
@@ -39,7 +39,7 @@ namespace Entities.Models
         [BsonElement]
         public bool IsActive { get; set; }
         [BsonElement]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId RoleId { get; set; }
 
         public Role? Role { get; set; }

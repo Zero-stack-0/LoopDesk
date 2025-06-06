@@ -5,7 +5,7 @@ namespace Entities.Models
 {
     public class Subscription
     {
-        public Subscription(string name, ObjectId userId, string description, int projectsAllowed, int usersAllowed, decimal price)
+        public Subscription(string name, ObjectId userId, string description, int projectsAllowed, int usersAllowed, decimal price, bool isTrial)
         {
             Name = name;
             Description = description;
@@ -15,6 +15,7 @@ namespace Entities.Models
             CreatedAt = DateTime.UtcNow;
             IsActive = true;
             UserId = userId;
+            IsTrial = isTrial;
         }
 
         [BsonId]
@@ -40,5 +41,7 @@ namespace Entities.Models
         public DateTime? UpdatedAt { get; set; }
         [BsonElement]
         public bool IsActive { get; set; }
+        [BsonElement]
+        public bool IsTrial { get; set; }
     }
 }
