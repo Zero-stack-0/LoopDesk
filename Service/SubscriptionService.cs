@@ -73,6 +73,40 @@ namespace Service
             }
         }
 
+        public async Task<CommonResponse> GetById(string id, UserResponse requestor)
+        {
+            try
+            {
+                if (requestor is null)
+                {
+                    return new CommonResponse(StatusCodes.Status400BadRequest, null, Constants.USER_VALIDATIONS.REQUESTOR_NOT_FOUND);
+                }
+
+                if (requestor.Role is null || requestor.Role.Name != Constants.ROLE.ADMIN)
+                {
+                    return new CommonResponse(StatusCodes.Status403Forbidden, null, Constants.USER_VALIDATIONS.USER_NOT_AUTHORIZED);
+                }
+
+                var subscriptionId = ObjectId.TryParse(id, out var objectId) ? objectId : ObjectId.Empty;
+                if (subscriptionId == ObjectId.Empty)
+                {
+                    return new CommonResponse(StatusCodes.Status400BadRequest, null, Constants.SUBSCRIPTION_VALIDATIONS.INVALID_ID);
+                }
+
+                var subscription = await subscriptionRepository.GetById(subscriptionId);
+                if (subscription == null)
+                {
+                    return new CommonResponse(StatusCodes.Status404NotFound, null, Constants.SUBSCRIPTION_VALIDATIONS.SUBSCRIPTION_NOT_FOUND);
+                }
+
+                return new CommonResponse(StatusCodes.Status200OK, mapper.Map<SubscriptionResponse>(subscription), Constants.SUBSCRIPTION_VALIDATIONS.FETCHED_SUCCESSFULLY);
+            }
+            catch (Exception ex)
+            {
+                return new CommonResponse(StatusCodes.Status500InternalServerError, null, ex.Message);
+            }
+        }
+
         public async Task<CommonResponse> GetAll(UserResponse requestor)
         {
             try
@@ -82,7 +116,7 @@ namespace Service
                     return new CommonResponse(StatusCodes.Status400BadRequest, null, Constants.USER_VALIDATIONS.REQUESTOR_NOT_FOUND);
                 }
 
-                if (requestor.Role is null || requestor.Role.Name != Constants.ROLE.COMPANY_ADMIN)
+                if (requestor.Role is null || requestor.Role.Name != Constants.ROLE.ADMIN)
                 {
                     return new CommonResponse(StatusCodes.Status403Forbidden, null, Constants.USER_VALIDATIONS.USER_NOT_AUTHORIZED);
                 }

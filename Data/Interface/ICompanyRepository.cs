@@ -7,6 +7,6 @@ namespace Data.Interface
     {
         Task<CompanyInformation> Create(CompanyInformation company);
         Task<CompanyInformation> GetCompanyByOwnerId(ObjectId ownerId);
-        Task<CompanyInformation> GetByIdAndOwnerId(ObjectId id, ObjectId ownerId);
+        Task<CompanyInformation?> GetByIdAndOwnerId(ObjectId id, ObjectId ownerId);
     }
 }
