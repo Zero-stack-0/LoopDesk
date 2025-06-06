@@ -7,5 +7,6 @@ namespace Service.Dto.Subscription
         public int ProjectsAllowed { get; set; }
         public int UsersAllowed { get; set; }
         public decimal Price { get; set; }
+        public bool IsTrial { get; set; }
     }
 }

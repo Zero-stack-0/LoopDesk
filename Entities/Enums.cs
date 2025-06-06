@@ -28,6 +28,13 @@ namespace Entities.Enums
         Completed = 2,
         Failed = 3
     }
+
+    public enum BillingCycle
+    {
+        OneTime = 1,
+        Monthly = 2,
+        Yearly = 3
+    }
 }
 
 

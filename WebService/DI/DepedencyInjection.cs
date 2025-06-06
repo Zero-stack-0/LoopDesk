@@ -20,6 +20,7 @@ namespace WebService.DI
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ICompanyInformationService, CompanyInformationService>();
+            services.AddScoped<IUserSubscriptionService, UserSubscriptionService>();
 
             //repositories
             services.AddScoped<IUserRepository, UsersRepository>();
@@ -27,6 +28,7 @@ namespace WebService.DI
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IUserSubscriptionRepository, UserSubscriptionRepository>();
 
             services.AddScoped<MongoDbContext>();
             services.AddScoped<GenerateJwtToken>();

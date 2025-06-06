@@ -48,5 +48,10 @@ namespace Data
             database.GetCollection<CompanyInformation>(
                 config.Value.Collections.FirstOrDefault(c => c == "companyinfo") ?? "companyinfo"
             );
+
+        public IMongoCollection<UserSubscription> UserSubscription =>
+            database.GetCollection<UserSubscription>(
+                config.Value.Collections.FirstOrDefault(c => c == "usersubscription") ?? "usersubscription"
+            );
     }
 }

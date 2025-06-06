@@ -45,5 +45,14 @@ namespace Data.Repository
             var filter = Builders<Subscription>.Filter.Eq(s => s.IsActive, true);
             return await subscriptionCollection.Find(filter).ToListAsync();
         }
+
+        public async Task<Subscription?> GetById(ObjectId id)
+        {
+            var filter = Builders<Subscription>.Filter.And(
+                Builders<Subscription>.Filter.Eq(s => s.Id, id),
+                Builders<Subscription>.Filter.Eq(s => s.IsActive, true)
+            );
+            return await subscriptionCollection.Find(filter).FirstOrDefaultAsync();
+        }
     }
 }

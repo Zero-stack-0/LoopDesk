@@ -23,5 +23,15 @@ namespace Data.Repository
             var filter = Builders<CompanyInformation>.Filter.Eq(c => c.OwnerId, ownerId);
             return await _companyCollection.Find(filter).FirstOrDefaultAsync();
         }
+
+        public async Task<CompanyInformation?> GetByIdAndOwnerId(ObjectId id, ObjectId ownerId)
+        {
+            var filter = Builders<CompanyInformation>.Filter.And(
+                Builders<CompanyInformation>.Filter.Eq(c => c.Id, id),
+                Builders<CompanyInformation>.Filter.Eq(c => c.OwnerId, ownerId),
+                Builders<CompanyInformation>.Filter.Eq(c => c.IsActive, true)
+            );
+            return await _companyCollection.Find(filter).FirstOrDefaultAsync();
+        }
     }
 }

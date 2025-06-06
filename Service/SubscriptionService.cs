@@ -38,7 +38,7 @@ namespace Service
                 var validations = new List<(bool Condition, string Error)>
                 {
                     (string.IsNullOrWhiteSpace(request.Name), Constants.SUBSCRIPTION_VALIDATIONS.NAME_REQUIRED),
-                    (request.Price <= 0, Constants.SUBSCRIPTION_VALIDATIONS.PRICE_MUST_BE_POSITIVE),
+                    (!request.IsTrial && request.Price <= 0, Constants.SUBSCRIPTION_VALIDATIONS.PRICE_MUST_BE_POSITIVE),
                     (request.ProjectsAllowed <= 0, Constants.SUBSCRIPTION_VALIDATIONS.PROJECTS_ALLOWED_MUST_BE_POSITIVE),
                     (request.UsersAllowed <= 0, Constants.SUBSCRIPTION_VALIDATIONS.USERS_ALLOWED_MUST_BE_POSITIVE),
                     (request.Name.Length > 100, Constants.SUBSCRIPTION_VALIDATIONS.NAME_TOO_LONG),
@@ -60,7 +60,7 @@ namespace Service
                     return new CommonResponse(StatusCodes.Status409Conflict, null, Constants.SUBSCRIPTION_VALIDATIONS.SUBSCRIPTION_WITH_NAME_ALREADY_EXISTS);
                 }
 
-                var subscription = new Subscription(request.Name, ObjectId.TryParse(requestor.Id, out var objectId) ? objectId : ObjectId.Empty, request.Description, request.ProjectsAllowed, request.UsersAllowed, request.Price);
+                var subscription = new Subscription(request.Name, ObjectId.TryParse(requestor.Id, out var objectId) ? objectId : ObjectId.Empty, request.Description, request.ProjectsAllowed, request.UsersAllowed, request.Price, request.IsTrial);
 
                 var createdSubscription = await subscriptionRepository.CreateAsync(subscription);
 
